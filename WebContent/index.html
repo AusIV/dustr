@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+
+	<meta name="description" content="A dust.js template compiler">
+	<meta name="keywords" content="dust js dustjs dust.js compiler javascript template ">
+	<meta name="publisher" content="Nicolas Laplante">
+
+	<title>dustr - a dust.js template compiler</title>
+
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
+	
+	<style>
+		body > .container {
+			padding-top: 60px;
+		}
+		
+		footer {
+			text-align: center;
+			margin-bottom: 20px;
+			border: 1px solid none;
+		}
+	</style>
+	
+	<link rel="author" href="https://plus.google.com/108189012221374960701">	
+	
+	<script type="text/javascript">
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-29774526-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+</head>
+
+<body>
+	<div class="navbar navbar-fixed-top">
+    	<div class="navbar-inner">
+    		<div class="container">
+    			<a class="brand" href="/">dustr.org</a>
+    		</div>
+    	</div>
+    </div>
+
+	<div class="container">
+		<div class="hero-unit">
+			<h1>dustr</h1>
+			<p>An online dustjs template compiler</p>
+		</div>
+		
+		<fieldset>
+			<legend>Define your template here:</legend>	
+			<div class="row-fluid">			
+		
+				<div class="span8">
+					<div class="field-controls">
+						<label class="control-label" for="input"><span class="badge badge-success">1</span> Place your template code in the area below:</label>
+						<div class="controls">							
+							<textarea placeholder="Dust template code here" id="input" tabindex="1" class="span12" rows="10"></textarea>
+						</div>
+					</div>							
+				</div>
+
+				<div class="span4">
+					<div class="form-controls">
+						<label for="name" class="control-label"><span class="badge badge-success">2</span> Identify your template with a unique name:</label>
+						<div class="controls">
+							<input type="text" placeholder="Template name" id="name" class="span12" tabindex="2">
+						</div>
+					</div>
+					
+					<div class="form-controls">			
+						<label class="control-label""><span class="badge badge-success">3</span> Compile your template:</label>
+					
+						<div class="controls">
+							<button class="btn disabled" id="btnCompile" tabindex="3">
+								<i class="icon-play"></i> Compile
+							</button>
+
+							<button class="btn btn-danger disabled" id="btnClear" tabindex="5">
+								<i class="icon-white icon-remove"></i> Clear
+							</button>
+						</div>
+					</div>
+					
+					<div class="well addthis_toolbox addthis_default_style addthis_32x32_style">
+						<p>You found dustr useful? Share it!</p>
+						<a class="addthis_button_twitter"></a>
+						<a class="addthis_button_facebook"></a>
+						<a class="addthis_button_google"></a>
+						<a class="addthis_button_compact"></a>
+						<a class="addthis_counter addthis_bubble_style"></a>
+					</div>
+				</div>					
+			</div>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Compiled template code:</legend>
+			<div class="row-fluid">
+				<div class="field-controls">
+					<div class="controls">
+						<textarea placeholder="Compiled Dust template" id="output" tabindex="4" class="span12" rows="10"></textarea>
+					</div>						
+					
+				</div>
+			</div>
+		</fieldset>
+		
+		<hr>
+		
+		<p>See the <a href="http://akdubya.github.com/dustjs/#guide" rel="external">dust.js guide</a> for further information.</p>
+	</div>
+
+	<footer class="container">		
+			Built using <a href="http://akdubya.github.com/dustjs/" rel="external" title="dust.js">dust.js</a>,
+			<a href="http://jsbeautifier.org/" rel="external" title="beautify.js">beautify.js</a> and 
+			<a href="http://twitter.github.com/bootstrap/" rel="external" title="Twitter Bootstrap">Twitter	Bootstrap</a>.<br> 
+			Copyright &copy; 2012 <a href="https://plus.google.com/108189012221374960701?rel=author" rel="author me external">Nicolas Laplante</a>. 
+			All rights reserved.				
+	</footer>
+
+	<script>
+	var addthis_config = {
+		pubid: "nlaplante",
+		services_exclude: 'print',
+		ui_click: true,
+		ui_language: 'en',
+		data_track_clickback: true,
+		data_ga_tracker: _gaq,
+		data_ga_property: 'UA-29774526-1'			
+	};
+	</script>
+	<script src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=nlaplante"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
+	<script src="scripts/dustjs/dist/dust-full-0.6.0.js"></script>
+	<script src="scripts/beautify.js"></script>
+	<script src="scripts/compiler.js"></script>
+</body>
+
+</html>
