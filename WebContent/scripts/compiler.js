@@ -1,76 +1,38 @@
 /*!
- * Online DustJS compiler helper script
- * 
- * $Id: compiler.js 10 2012-03-20 22:06:41Z nlaplante $
- * 
+ * Online DustJS compiler Angular controller script * 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
- */
-
-"use strict";
-
-(function ($) {	
-	var	inputElement = $("#input"),
-		outputElement = $("#output"),
-		nameElement = $("#name"),
-		btnCompile = $("#btnCompile"),
-		btnClear = $("#btnClear"),
-		fnTrackUserAction = function (action) {
-			if (typeof (_gaq) !== "undefined") {
-				_gaq.push(['_trackEvent', 'User actions', action]);
-			}
-		};	
-	
-	$(function() {
-		inputElement.add(nameElement).on('paste keyup', function (e) {
-			outputElement.html(null);
-			btnCompile.add(btnClear).trigger("compiler:input:changed");
-		});
-		
-		// Output area events
-		outputElement.on('focus', function (e) {
-			outputElement.select();
-		}).on('copy cut', function (e) {
-			fnTrackUserAction('Copy output to clipboard');
-		}).on('mouseup', function (e) {
-			e.preventDefault();
-		});
-		
-		// Compile button events
-		btnCompile.on('click', function (e) {
-			if (!btnCompile.hasClass("disabled")) {
-				outputElement.val(js_beautify(dust.compile(inputElement.val(), nameElement.val()))).focus();
-				fnTrackUserAction('Compile template');
-			}
-			
-			btnCompile.trigger("compiler:input:changed");
-		}).on('compiler:input:changed', function (e) {			
-			if (inputElement.val() === "" || nameElement.val() === "") {
-				btnCompile.addClass("disabled");
-			}
-			else if (inputElement.val() !== "" && nameElement.val() !== "") {
-				btnCompile.removeClass("disabled");
-			}
-		}).trigger("compiler:input:changed");
-		
-		// Clear button events
-		btnClear.on('click', function (e) {
-			if (!btnClear.hasClass("disabled")) {
-				outputElement.add(inputElement).add(nameElement).val(null);
-				fnTrackUserAction('Clear fields');
-			}
-			
-			btnClear.add(btnCompile).trigger("compiler:input:changed");
-		}).on('compiler:input:changed', function (e) {
-			if (inputElement.val() === "" && nameElement.val() === "") {
-				btnClear.addClass("disabled");
-			}
-			else if (inputElement.val() !== "" || nameElement.val() !== "") {
-				btnClear.removeClass("disabled");
-			}
-		}).trigger("compiler:input:changed");
-		
-		// Make external links open in new window
-		$("a[rel~=external]").attr("target", "_blank");
+ */ 
+function DustrCtrl($scope)
+{
+	// Input & output fields
+	$.extend($scope, {
+		source: null,
+		name: null,
+		output: null
 	});
 	
-}(jQuery));
+	// Events
+	$scope.compile = function () {
+		$scope.output = dust.compile($scope.source, $scope.name);
+	};
+	
+	// Handler to clear the fields
+	$scope.clear = function () {
+		$scope.source = null;
+		$scope.name = null;
+		$scope.output = null;
+	};
+	
+	// Handler to determine if compile and reset buttons should be enabled/disabled
+	$scope.isUnchanged = function () {
+		return $scope.source == null
+			&& $scope.name == null;
+	};
+	
+	// js_beautify() when setting the output
+	$scope.$watch("output", function (newValue, oldValue) {
+		if (newValue !== null) {
+			$scope.output = js_beautify(newValue);
+		}
+	});
+}

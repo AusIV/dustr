@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app>
 
 <head>
 	<meta charset="utf-8">
@@ -23,6 +23,12 @@
 			text-align: center;
 			margin-bottom: 20px;
 			border: 1px solid none;
+		}
+		
+		.navbar .brand {
+			font-weight: bold;
+			color: #000;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 30px rgba(255, 255, 255, 0.125);
 		}
 		
 		.control-group {
@@ -49,11 +55,12 @@
 	</script>
 </head>
 
-<body>
+<body ng-controller="DustrCtrl">
 	<div class="navbar navbar-fixed-top">
     	<div class="navbar-inner">
     		<div class="container">
     			<a class="brand" href="/">dustr.org</a>
+    			<p class="navbar-text">An online dust.js template compiler</p>
     		</div>
     	</div>
     </div>
@@ -64,55 +71,57 @@
 			<p>An online dustjs template compiler</p>
 		</div>
 		
-		<fieldset>
-			<legend>Define your template here:</legend>	
-			<div class="row-fluid">			
-		
-				<div class="span8">
-					<div class="control-group">
-						<label class="control-label" for="input"><span class="badge badge-success">1</span> Place your template code in the area below:</label>
-						<div class="controls">							
-							<textarea placeholder="Dust template code here" id="input" tabindex="1" class="span12" rows="10"></textarea>
-						</div>
-					</div>							
-				</div>
-
-				<div class="span4">
-					<div class="control-group">
-						<label for="name" class="control-label"><span class="badge badge-success">2</span> Identify your template with a unique name:</label>
-						<div class="controls">
-							<input type="text" placeholder="Ex.: 'my_dust_template'" id="name" class="span12" tabindex="2">
-						</div>
+		<form name="dustrForm"  novalidate>
+			<fieldset>
+				<legend>Define your template here:</legend>	
+				<div class="row-fluid">			
+			
+					<div class="span8">
+						<div class="control-group">
+							<label class="control-label" for="input"><span class="badge badge-success">1</span> Place your template code in the area below:</label>
+							<div class="controls">							
+								<textarea placeholder="Paste template code here" tabindex="1" class="span12" rows="10" ng-model="source" required></textarea>
+							</div>
+						</div>							
 					</div>
-					
-					<div class="form-actions control-group">			
-						<label class="control-label""><span class="badge badge-success">3</span> Compile your template:</label>
-					
-						<div class="controls">
-							<button class="btn disabled" id="btnCompile" tabindex="3">
-								<i class="icon-play"></i> Compile
-							</button>
-
-							<button class="btn btn-danger disabled" id="btnClear" tabindex="5">
-								<i class="icon-white icon-remove"></i> Clear
-							</button>
+	
+					<div class="span4">
+						<div class="control-group">
+							<label for="name" class="control-label"><span class="badge badge-success">2</span> Identify your template with a unique name:</label>
+							<div class="controls">
+								<input type="text" placeholder="Ex.: 'my_dust_template'" class="span12" tabindex="2" ng-model="name" required>
+							</div>
 						</div>
-					</div>
-				</div>					
-			</div>
-		</fieldset>
-		
-		<fieldset>
-			<legend>Compiled template code:</legend>
-			<div class="row-fluid">
-				<div class="field-controls">
-					<div class="controls">
-						<textarea placeholder="Compiled Dust template" id="output" tabindex="4" class="span12" rows="10"></textarea>
-					</div>						
-					
+						
+						<div class="form-actions control-group">			
+							<label class="control-label"><span class="badge badge-success">3</span> Compile your template:</label>
+						
+							<div class="controls">
+								<button class="btn btn-large" tabindex="3" ng-disabled="dustrForm.$invalid || isUnchanged()" ng-click="compile()">
+									<i class="icon-play"></i> Compile
+								</button>
+	
+								<button class="btn btn-danger btn-large" tabindex="5" ng-disabled="isUnchanged()" ng-click="clear()">
+									<i class="icon-white icon-remove"></i> Clear
+								</button>
+							</div>
+						</div>
+					</div>					
 				</div>
-			</div>
-		</fieldset>
+			</fieldset>
+			
+			<fieldset>
+				<legend>Compiled template code:</legend>
+				<div class="row-fluid">
+					<div class="field-controls">
+						<div class="controls">
+							<textarea tabindex="4" class="span12" rows="10" ng-model="output"></textarea>
+						</div>						
+						
+					</div>
+				</div>
+			</fieldset>
+		</form>
 		
 		<hr>
 		
@@ -120,17 +129,19 @@
 	</div>
 
 	<footer class="container">		
-			Built using <a href="http://akdubya.github.com/dustjs/" rel="external" title="dust.js">dust.js</a>,
-			<a href="http://jsbeautifier.org/" rel="external" title="beautify.js">beautify.js</a> and 
-			<a href="http://twitter.github.com/bootstrap/" rel="external" title="Twitter Bootstrap">Twitter	Bootstrap</a>.<br> 
-			Copyright &copy; 2012 <a href="https://plus.google.com/108189012221374960701?rel=author" rel="author me external">Nicolas Laplante</a>. 
-			All rights reserved.				
+		Built using <a href="http://akdubya.github.com/dustjs/" rel="external" title="dust.js">dust.js</a>,
+		<a href="http://jsbeautifier.org/" rel="external" title="beautify.js">beautify.js</a>,
+		<a href="http://angularjs.org/" rel="external" title="angularjs">angular.js</a> and 
+		<a href="http://twitter.github.com/bootstrap/" rel="external" title="Twitter Bootstrap">Twitter	Bootstrap</a>.<br> 
+		Copyright &copy; 2012 <a href="https://plus.google.com/108189012221374960701?rel=author" rel="author me external">Nicolas Laplante</a>. 
+		All rights reserved.				
 	</footer>
 	
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script src="scripts/bootstrap.min.js"></script>
 	<script src="scripts/dustjs/dist/dust-full-0.6.0.js"></script>
 	<script src="scripts/beautify.js"></script>
+	<script src="scripts/angular-1.0.1.min.js"></script>
 	<script src="scripts/compiler.js"></script>
 </body>
 
