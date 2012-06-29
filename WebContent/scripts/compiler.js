@@ -14,6 +14,11 @@ function DustrCtrl($scope)
 	// Events
 	$scope.compile = function () {
 		$scope.output = dust.compile($scope.source, $scope.name);
+		
+		if (typeof (_gaq) !== "undefined") {
+			_gaq.push(['_trackEvent', "User actions", "Compile template"]);			
+		
+		}
 	};
 	
 	// Handler to clear the fields
