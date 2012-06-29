@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app="dustr">
 
 <head>
 	<meta charset="utf-8">
@@ -49,7 +49,7 @@
 	</script>
 </head>
 
-<body>
+<body ng-controller="dustr">
 	<div class="navbar navbar-fixed-top">
     	<div class="navbar-inner">
     		<div class="container">
@@ -72,7 +72,7 @@
 					<div class="control-group">
 						<label class="control-label" for="input"><span class="badge badge-success">1</span> Place your template code in the area below:</label>
 						<div class="controls">							
-							<textarea placeholder="Dust template code here" id="input" tabindex="1" class="span12" rows="10"></textarea>
+							<textarea placeholder="Dust template code here" tabindex="1" class="span12" rows="10" ng-model="source"></textarea>
 						</div>
 					</div>							
 				</div>
@@ -81,7 +81,7 @@
 					<div class="control-group">
 						<label for="name" class="control-label"><span class="badge badge-success">2</span> Identify your template with a unique name:</label>
 						<div class="controls">
-							<input type="text" placeholder="Ex.: 'my_dust_template'" id="name" class="span12" tabindex="2">
+							<input type="text" placeholder="Ex.: 'my_dust_template'" id="name" class="span12" tabindex="2" ng-model="name">
 						</div>
 					</div>
 					
@@ -89,11 +89,11 @@
 						<label class="control-label""><span class="badge badge-success">3</span> Compile your template:</label>
 					
 						<div class="controls">
-							<button class="btn disabled" id="btnCompile" tabindex="3">
+							<button class="btn disabled" id="btnCompile" tabindex="3" ng-click="evtCompile()">
 								<i class="icon-play"></i> Compile
 							</button>
 
-							<button class="btn btn-danger disabled" id="btnClear" tabindex="5">
+							<button class="btn btn-danger disabled" id="btnClear" tabindex="5" ng-click="evtClear()">
 								<i class="icon-white icon-remove"></i> Clear
 							</button>
 						</div>
@@ -107,7 +107,7 @@
 			<div class="row-fluid">
 				<div class="field-controls">
 					<div class="controls">
-						<textarea placeholder="Compiled Dust template" id="output" tabindex="4" class="span12" rows="10"></textarea>
+						<textarea placeholder="Compiled Dust template" id="output" tabindex="4" class="span12" rows="10" ng-model="output"></textarea>
 					</div>						
 					
 				</div>
