@@ -41,12 +41,13 @@ function DustrCtrl($scope)
 	});
 }
 
-/**
- * Select compiled template on output
- */
+
 (function () {
 	var dustr = angular.module("dustr", []);
-	
+
+	/**
+	 * Select compiled template on output
+	 */
 	dustr.directive("ngWatchSelect", function () {
 		return function (scope, element, attrs) {
 			scope.$watch("output", function (newValue, oldValue) {
@@ -57,6 +58,9 @@ function DustrCtrl($scope)
 		};
 	});
 	
+	/**
+	 * Track Google Analytics events
+	 */
 	dustr.directive("ngTrackGa", function () {
 		return function (scope, element, attrs) {			
 			$(element).on(attrs.ngTrackGa, function (e) {
