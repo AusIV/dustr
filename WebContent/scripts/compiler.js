@@ -1,9 +1,11 @@
-/*!
- * Online DustJS compiler Angular controller script * 
+/**!
+ * Online DustJS compiler Angular controller script 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
  */ 
 function DustrCtrl($scope)
 {
+	"use strict";
+	
 	// Input & output fields
 	$.extend($scope, {
 		source: null,
@@ -15,10 +17,7 @@ function DustrCtrl($scope)
 	$scope.compile = function () {
 		$scope.output = dust.compile($scope.source, $scope.name);
 		
-		if (typeof (_gaq) !== "undefined") {
-			_gaq.push(['_trackEvent', "User actions", "Compile template"]);			
 		
-		}
 	};
 	
 	// Handler to clear the fields
@@ -41,3 +40,31 @@ function DustrCtrl($scope)
 		}
 	});
 }
+
+/**
+ * Select compiled template on output
+ */
+(function () {
+	var dustr = angular.module("dustr", []);
+	
+	dustr.directive("ngWatchSelect", function () {
+		return function (scope, element, attrs) {
+			scope.$watch("output", function (newValue, oldValue) {
+				if (newValue !== null) {
+					element.select();
+				}	
+			});
+		};
+	});
+	
+	dustr.directive("ngTrackGa", function () {
+		return function (scope, element, attrs) {			
+			$(element).on(attrs.ngTrackGa, function (e) {
+				if (typeof (_gaq) !== "undefined") {
+					_gaq.push(['_trackEvent', attrs.ngTrackGaCategory, attrs.ngTrackGaName]);
+				}
+			});
+		};
+	});
+}());
+
