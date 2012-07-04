@@ -1,3 +1,0 @@
-[submodule "WebContent/scripts/dustjs"]
-	path = WebContent/scripts/dustjs
-	url = https://github.com/linkedin/dustjs.git
