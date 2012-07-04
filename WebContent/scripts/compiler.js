@@ -71,6 +71,9 @@ function DustrCtrl($scope)
 				if (typeof (_gaq) !== "undefined") {
 					_gaq.push(['_trackEvent', attrs.ngTrackGaCategory, attrs.ngTrackGaName]);
 				}
+				else {
+					$log.error("_gaq object is undefined. Did you load Google Analytics?");
+				}
 			});
 		};
 	});
