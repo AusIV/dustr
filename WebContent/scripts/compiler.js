@@ -16,8 +16,6 @@ function DustrCtrl($scope)
 	// Events
 	$scope.compile = function () {
 		$scope.output = dust.compile($scope.source, $scope.name);
-		
-		
 	};
 	
 	// Handler to clear the fields
@@ -61,9 +59,15 @@ function DustrCtrl($scope)
 	/**
 	 * Track Google Analytics events
 	 */
-	dustr.directive("ngTrackGa", function () {
-		return function (scope, element, attrs) {			
-			$(element).on(attrs.ngTrackGa, function (e) {
+	dustr.directive("ngTrackGa", function ($log) {
+		return function (scope, element, attrs) {
+			if (!attrs.hasOwnProperty("ngTrackGaCategory") ||
+				!attrs.hasOwnProperty("ngTrackGaName")) {
+				$log.error("ng-track-ga-category and/or ng-track-ga-name attributes not specified");
+				return;
+			}
+			
+			angular.element(element).on(attrs.ngTrackGa, function (e) {
 				if (typeof (_gaq) !== "undefined") {
 					_gaq.push(['_trackEvent', attrs.ngTrackGaCategory, attrs.ngTrackGaName]);
 				}
