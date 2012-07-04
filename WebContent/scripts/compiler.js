@@ -7,7 +7,7 @@ function DustrCtrl($scope)
 	"use strict";
 	
 	// Input & output fields
-	$.extend($scope, {
+	angular.extend($scope, {
 		source: null,
 		name: null,
 		output: null
@@ -50,7 +50,7 @@ function DustrCtrl($scope)
 		return function (scope, element, attrs) {
 			scope.$watch("output", function (newValue, oldValue) {
 				if (newValue !== null) {
-					element.select();
+					element[0].select();
 				}	
 			});
 		};
@@ -67,7 +67,7 @@ function DustrCtrl($scope)
 				return;
 			}
 			
-			angular.element(element).on(attrs.ngTrackGa, function (e) {
+			angular.element(element).bind(attrs.ngTrackGa, function (e) {
 				if (typeof (_gaq) !== "undefined") {
 					_gaq.push(['_trackEvent', attrs.ngTrackGaCategory, attrs.ngTrackGaName]);
 				}
