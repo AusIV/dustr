@@ -10,7 +10,8 @@ function DustrCtrl($scope)
 	angular.extend($scope, {
 		source: null,
 		name: null,
-		output: null
+		output: null,
+		outputVisible: false
 	});
 	
 	// Events
@@ -36,6 +37,8 @@ function DustrCtrl($scope)
 		if (newValue !== null) {
 			$scope.output = js_beautify(newValue);
 		}
+		
+		$scope.outputVisible = (newValue !== null);
 	});
 }
 
@@ -46,11 +49,13 @@ function DustrCtrl($scope)
 	/**
 	 * Select compiled template on output
 	 */
-	dustr.directive("ngWatchSelect", function () {
+	dustr.directive("ngWatchSelect", function ($timeout) {
 		return function (scope, element, attrs) {
 			scope.$watch("output", function (newValue, oldValue) {
 				if (newValue !== null) {
-					element[0].select();
+					$timeout(function () {
+						element[0].select();
+					}, 10, true);
 				}	
 			});
 		};
