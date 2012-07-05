@@ -46,38 +46,6 @@ function DustrCtrl($scope, $window)
 
 (function () {
 	var dustr = angular.module("dustr", []);
-
-	/**
-	 * Select compiled template on output
-	 */
-	dustr.directive("ngWatchSelect", function ($timeout) {
-		return function (scope, element, attrs) {
-			scope.$watch("output", function (newValue, oldValue) {
-				if (newValue !== null) {
-					$timeout(function () {
-						var refNode = element[0];
-						
-						
-						//	var range = document.body.createTextRange();
-						//	range.moveToElementText( refNode );
-						//	range.select();
-						
-						
-						//	var selection = window.getSelection();
-						//	var range = document.createRange();
-						//	range.selectNodeContents( refNode );
-						//	selection.removeAllRanges();
-						//	selection.addRange( range );
-						
-						
-						//	var selection = window.getSelection();
-						//	selection.setBaseAndExtent( refNode, 0, refNode, 1 );
-						
-					}, 10, true);
-				}	
-			});
-		};
-	});
 	
 	/**
 	 * Track Google Analytics events
