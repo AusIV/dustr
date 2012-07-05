@@ -2,7 +2,7 @@
  * Online DustJS compiler Angular controller script 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
  */ 
-function DustrCtrl($scope)
+function DustrCtrl($scope, $window)
 {
 	"use strict";
 	
@@ -36,6 +36,7 @@ function DustrCtrl($scope)
 	$scope.$watch("output", function (newValue, oldValue) {
 		if (newValue !== null) {
 			$scope.output = js_beautify(newValue);
+			prettyPrint();
 		}
 		
 		$scope.outputVisible = (newValue !== null);
@@ -54,7 +55,24 @@ function DustrCtrl($scope)
 			scope.$watch("output", function (newValue, oldValue) {
 				if (newValue !== null) {
 					$timeout(function () {
-						element[0].select();
+						var refNode = element[0];
+						
+						
+						//	var range = document.body.createTextRange();
+						//	range.moveToElementText( refNode );
+						//	range.select();
+						
+						
+						//	var selection = window.getSelection();
+						//	var range = document.createRange();
+						//	range.selectNodeContents( refNode );
+						//	selection.removeAllRanges();
+						//	selection.addRange( range );
+						
+						
+						//	var selection = window.getSelection();
+						//	selection.setBaseAndExtent( refNode, 0, refNode, 1 );
+						
 					}, 10, true);
 				}	
 			});

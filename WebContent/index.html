@@ -11,6 +11,7 @@
 
 	<title>dustr - a dust.js template compiler</title>
 
+	<link rel="stylesheet" href="css/prettify.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
 	
@@ -25,6 +26,24 @@
 			border: 1px solid none;
 		}
 		
+		input[ng-model=name] {
+			font-size: 20px;
+			height: 48px;
+			line-height: 24px;
+			font-weight: bold;
+			padding: 10px 15px;
+		}
+		
+		textarea {
+			font-family: Monospace;
+			padding: 20px;
+		}
+		
+		.hero-unit h1 {
+			font-size: 71px;
+			letter-spacing: -3px;
+		}
+		
 		.control-group {
 			margin-bottom: 18px;
 		}
@@ -36,6 +55,11 @@
 		.twitter-share-button {
 			position: relative;
 			top: 2px;
+		}
+		
+		pre.prettyprint {
+			border: 1px solid rgba(0, 0, 0, 0.15) !important;
+			padding: 8.5px !important;
 		}
 	</style>
 	
@@ -67,7 +91,7 @@
 	<div class="container">
 		<div class="hero-unit">
 			<h1>dustr</h1>
-			<p>An online dustjs template compiler</p>
+			<p>An online <a href="http://akdubya.github.com/dustjs/" rel="external">dustjs</a> template compiler</p>
 			<div class="g-plusone" data-annotation="none" data-href="http://dustr.org"></div>
 			<a href="https://twitter.com/share" class="twitter-share-button" data-url="http://dustr.org" data-text="Try out this neat #dustjs template compiler!" data-size="large" data-hashtags="webdev" data-count="none">Tweet</a>
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>			
@@ -118,9 +142,13 @@
 				<div class="row-fluid">
 					<div class="field-controls">
 						<div class="controls">
-							<textarea tabindex="4" class="span12" rows="10" readonly="readonly"
+							<!-- <textarea tabindex="4" class="span12" readonly="readonly" id="output"
 								ng-model="output"
 								ng-watch-select></textarea>
+							-->
+							<pre id="output" class="prettyprint lang-js" ng-bind="output" ng-watch-select>
+							</pre>
+							<p class="help-block">Copy this code and put it in your templates script.</p>
 						</div>						
 						
 					</div>
@@ -136,12 +164,19 @@
 	<footer class="container">		
 		Built using <a href="https://github.com/linkedin/dustjs" rel="external" title="dust.js">dust.js</a>,
 		<a href="http://jsbeautifier.org/" rel="external" title="beautify.js">beautify.js</a>,
+		<a href="http://code.google.com/p/google-code-prettify/" rel="external" title="google-code-prettify">google-code-prettify</a>,
 		<a href="http://angularjs.org/" rel="external" title="angularjs">angular.js</a> and 
 		<a href="http://twitter.github.com/bootstrap/" rel="external" title="Twitter Bootstrap">Twitter	Bootstrap</a>.<br> 
 		Copyright &copy; 2012 <a href="https://plus.google.com/108189012221374960701?rel=author" rel="author me external">Nicolas Laplante</a>. 
-		All rights reserved.				
+		All rights reserved.		
+		
+		<a href="https://github.com/nlaplante/dustr" rel="external">
+			<img style="position: fixed; top: 0; right: 0; border: 0; z-index: 1040" 
+				src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub">
+		</a>		
 	</footer>
 	
+	<script src="scripts/prettify.js"></script>
 	<script src="scripts/dust-full-1.0.0.js"></script>
 	<script src="scripts/beautify.js"></script>
 	<script src="scripts/angular-1.0.1.min.js"></script>
