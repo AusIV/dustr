@@ -1,8 +1,10 @@
+PR_SHOULD_USE_CONTINUATION = true;
+
 /**!
  * Online DustJS compiler Angular controller script 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
  */ 
-function DustrCtrl($scope, $window)
+function DustrCtrl($scope, $window, $timeout)
 {
 	"use strict";
 	
@@ -10,20 +12,28 @@ function DustrCtrl($scope, $window)
 	angular.extend($scope, {
 		source: null,
 		name: null,
-		output: null,
+		output: {
+			raw: null,
+			beautiful: null
+		},
 		outputVisible: false
 	});
 	
 	// Events
 	$scope.compile = function () {
-		$scope.output = dust.compile($scope.source, $scope.name);
+		$scope.output.raw = dust.compile($scope.source, $scope.name);
+	};
+	
+	$scope.init = function () {
+		window['PR_SHOULD_USE_CONTINUATION'] = false;
 	};
 	
 	// Handler to clear the fields
 	$scope.clear = function () {
 		$scope.source = null;
 		$scope.name = null;
-		$scope.output = null;
+		$scope.output.raw = null;
+		$scope.output.beautiful = null;
 	};
 	
 	// Handler to determine if compile and reset buttons should be enabled/disabled
@@ -33,13 +43,20 @@ function DustrCtrl($scope, $window)
 	};
 	
 	// js_beautify() when setting the output
-	$scope.$watch("output", function (newValue, oldValue) {
+	$scope.$watch("output.raw", function (newValue, oldValue) {
 		if (newValue !== null) {
-			$scope.output = js_beautify(newValue);
-			prettyPrint();
+			$scope.output.beautiful = js_beautify(newValue);
+			
+		}
+		else {
+			$scope.output.beautiful = null;
 		}
 		
 		$scope.outputVisible = (newValue !== null);
+		
+		$timeout(function () {
+			prettyPrint();
+		}, 1, false);
 	});
 }
 
@@ -66,6 +83,30 @@ function DustrCtrl($scope, $window)
 					$log.error("_gaq object is undefined. Did you load Google Analytics?");
 				}
 			});
+		};
+	});
+	
+	dustr.directive("ngSelectOnClick", function () {
+		return function (scope, element, attrs) {			
+			angular.element(element).on('click', function (e) {
+				var obj = $(this)[0];
+				
+				if ($.browser.msie) {
+			        var range = obj.offsetParent.createTextRange();
+			        range.moveToElementText(obj);
+			        range.select();
+			    } else if ($.browser.mozilla || $.browser.opera) {
+			        var selection = obj.ownerDocument.defaultView.getSelection();
+			        var range = obj.ownerDocument.createRange();
+			        range.selectNodeContents(obj);
+			        selection.removeAllRanges();
+			        selection.addRange(range);
+			    } else if ($.browser.safari) {
+			        var selection = obj.ownerDocument.defaultView.getSelection();
+			        selection.setBaseAndExtent(obj, 0, obj, 1);
+			    }
+
+			})
 		};
 	});
 }());

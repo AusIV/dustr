@@ -1,0 +1,50 @@
+body>.container {
+	padding-top: 60px;
+}
+
+footer {
+	text-align: center;
+	margin-bottom: 20px;
+	border: 1px solid none;
+}
+
+input[ng-model=name] {
+	font-size: 20px;
+	height: 48px;
+	line-height: 24px;
+	font-weight: bold;
+	padding: 10px 15px;
+}
+
+textarea {
+	font-family: Monospace;
+	padding: 20px;
+}
+
+.hero-unit h1 {
+	font-size: 71px;
+	letter-spacing: -3px;
+}
+
+.control-group {
+	margin-bottom: 18px;
+}
+
+.control-group .control-label {
+	margin-bottom: 10px;
+}
+
+.twitter-share-button {
+	position: relative;
+	top: 2px;
+}
+
+code,pre {
+	font-family: "Ubuntu Mono", Menlo, Monaco, Consolas, "Courrier New",
+		monospace;
+	font-size: 1em;
+}
+
+pre[ng-select-on-click] {
+	cursor: pointer;
+}

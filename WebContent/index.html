@@ -14,54 +14,7 @@
 	<link rel="stylesheet" href="css/prettify.css">
 	<link rel="stylesheet" href="css/bootstrap.min.css">
 	<link rel="stylesheet" href="css/bootstrap-responsive.min.css">
-	
-	<style>
-		body > .container {
-			padding-top: 60px;
-		}
-		
-		footer {
-			text-align: center;
-			margin-bottom: 20px;
-			border: 1px solid none;
-		}
-		
-		input[ng-model=name] {
-			font-size: 20px;
-			height: 48px;
-			line-height: 24px;
-			font-weight: bold;
-			padding: 10px 15px;
-		}
-		
-		textarea {
-			font-family: Monospace;
-			padding: 20px;
-		}
-		
-		.hero-unit h1 {
-			font-size: 71px;
-			letter-spacing: -3px;
-		}
-		
-		.control-group {
-			margin-bottom: 18px;
-		}
-		
-		.control-group .control-label {
-			margin-bottom: 10px;
-		}
-		
-		.twitter-share-button {
-			position: relative;
-			top: 2px;
-		}
-		
-		pre.prettyprint {
-			border: 1px solid rgba(0, 0, 0, 0.15) !important;
-			padding: 8.5px !important;
-		}
-	</style>
+	<link rel="stylesheet" href="css/dustr.css">
 	
 	<link rel="author" href="https://plus.google.com/108189012221374960701">	
 	
@@ -82,8 +35,21 @@
 	<div class="navbar navbar-fixed-top">
     	<div class="navbar-inner">
     		<div class="container">
+    			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				
     			<a class="brand" href="/">dustr.org</a>
-    			<p class="navbar-text">An online dust.js template compiler</p>
+    			
+    			<div class="nav-collapse">
+    				<ul class="nav">
+    					<li class="active"><a href="/" rel="start">Home</a></li>
+    					<li><a href="http://akdubya.github.com/dustjs/" rel="external">Docs</a></li>
+    					<li><a href="https://github.com/nlaplante/dustr" rel="external">Fork</a></li>
+    				</ul>
+    			</div>
     		</div>
     	</div>
     </div>
@@ -107,6 +73,7 @@
 							<label class="control-label" for="input">Place your template code in the area below:</label>
 							<div class="controls">							
 								<textarea placeholder="Paste template code here" tabindex="1" class="span12" rows="10" ng-model="source" required></textarea>
+								<p class="help-block">See the <a href="http://akdubya.github.com/dustjs/#guide" rel="external">dust.js guide</a> for further information.</p>
 							</div>
 						</div>							
 					</div>
@@ -123,13 +90,13 @@
 							<label class="control-label">Compile your template:</label>
 						
 							<div class="controls">
-								<button class="btn" tabindex="3" ng-disabled="dustrForm.$invalid || isUnchanged()" ng-click="compile()"
+								<button class="btn btn-primary" tabindex="3" ng-disabled="dustrForm.$invalid || isUnchanged()" ng-click="compile()"
 									ng-track-ga="click" ng-track-ga-category="User actions" ng-track-ga-name="Compile template">
-									<i class="icon-play"></i> Compile
+									<i class="icon-white icon-play"></i> Compile
 								</button>
 	
-								<button class="btn btn-danger" tabindex="5" ng-disabled="isUnchanged()" ng-click="clear()">
-									<i class="icon-white icon-remove"></i> Clear
+								<button class="btn" tabindex="5" ng-disabled="isUnchanged()" ng-click="clear()">
+									<i class="icon-remove"></i> Clear
 								</button>
 							</div>
 						</div>
@@ -142,22 +109,33 @@
 				<div class="row-fluid">
 					<div class="field-controls">
 						<div class="controls">
-							<pre id="output" class="prettyprint lang-js" ng-bind="output">
-							</pre>
+							<ul class="nav nav-tabs">
+								<li class="active"><a href="#tab-output-beautiful" data-toggle="tab">Beautiful</a></li>
+								<li><a href="#tab-output-raw" data-toggle="tab">Raw</a></li>
+							</div>
+							
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab-output-beautiful">
+									<pre id="output-beautiful" class="prettyprint lang-js linenums" ng-bind="output.beautiful" ng-init="init()" ng-select-on-click>
+									</pre>
+								</div>
+								<div class="tab-pane" id="tab-output-raw">
+									<pre id="output-raw" ng-bind="output.raw" ng-select-on-click>
+									</pre>
+								</div>
+							</div>							
+							
 							<p class="help-block">Copy this code and put it in your templates script.</p>
 						</div>						
 						
 					</div>
 				</div>
 			</fieldset>
-		</form>
-		
-		<hr>
-		
-		<p>See the <a href="http://akdubya.github.com/dustjs/#guide" rel="external">dust.js guide</a> for further information.</p>
+		</form>		
 	</div>
 
 	<footer class="container">		
+		<hr>
 		Built using <a href="https://github.com/linkedin/dustjs" rel="external" title="dust.js">dust.js</a>,
 		<a href="http://jsbeautifier.org/" rel="external" title="beautify.js">beautify.js</a>,
 		<a href="http://code.google.com/p/google-code-prettify/" rel="external" title="google-code-prettify">google-code-prettify</a>,
@@ -172,6 +150,8 @@
 		</a>		
 	</footer>
 	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="scripts/bootstrap.min.js"></script>
 	<script src="scripts/prettify.js"></script>
 	<script src="scripts/dust-full-1.0.0.js"></script>
 	<script src="scripts/beautify.js"></script>
