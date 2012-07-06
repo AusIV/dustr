@@ -41,7 +41,7 @@
 					<span class="icon-bar"></span>
 				</a>
 				
-    			<a class="brand" href="/">dustr.org</a>
+    			<a class="brand" href="/" rel="home">dustr.org</a>
     			
     			<div class="nav-collapse">
     				<ul class="nav">
@@ -63,74 +63,105 @@
 			<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>			
 		</div>
 		
-		<form name="dustrForm"  novalidate>
-			<fieldset>
-				<legend>Define your template here:</legend>	
-				<div class="row-fluid">			
+		<form name="dustrForm" novalidate>
+				<ul class="nav nav-tabs">
+					<li class="active"><a href="#pane-source" data-toggle="tab" ng-activate-on-output>Source</a></li>
+					<li><a href="#pane-history" data-toggle="tab" ng-if-feature="localstorage">History ({{ history.items.length }})</a>
+				</ul>
 			
-					<div class="span8">
-						<div class="control-group">
-							<label class="control-label" for="input">Place your template code in the area below:</label>
-							<div class="controls">							
-								<textarea placeholder="Paste template code here" tabindex="1" class="span12" rows="10" ng-model="source" required></textarea>
-								<p class="help-block">See the <a href="http://akdubya.github.com/dustjs/#guide" rel="external">dust.js guide</a> for further information.</p>
+				<div class="tab-content">
+					<div id="pane-source" class="tab-pane active">
+						<fieldset>
+							<legend>Define your template here:</legend>						
+						<div class="row-fluid">								
+							<div class="span8">
+								<div class="control-group">
+									<label class="control-label" for="input">Place your template code in the area below:</label>
+									<div class="controls">							
+										<textarea placeholder="Paste template code here" tabindex="1" class="span12" rows="10" ng-model="source" required></textarea>
+										<p class="help-block">See the <a href="http://akdubya.github.com/dustjs/#guide" rel="external">dust.js guide</a> for further information.</p>
+									</div>
+								</div>							
 							</div>
-						</div>							
-					</div>
-	
-					<div class="span4">
-						<div class="control-group">
-							<label for="name" class="control-label">Identify your template with a unique name:</label>
-							<div class="controls">
-								<input type="text" placeholder="Ex.: 'my_dust_template'" class="span12" tabindex="2" ng-model="name" required>
-							</div>
-						</div>
-						
-						<div class="form-actions control-group">			
-							<label class="control-label">Compile your template:</label>
-						
-							<div class="controls">
-								<button class="btn btn-primary" tabindex="3" ng-disabled="dustrForm.$invalid || isUnchanged()" ng-click="compile()"
-									ng-track-ga="click" ng-track-ga-category="User actions" ng-track-ga-name="Compile template">
-									<i class="icon-white icon-play"></i> Compile
-								</button>
-	
-								<button class="btn" tabindex="5" ng-disabled="isUnchanged()" ng-click="clear()">
-									<i class="icon-remove"></i> Clear
-								</button>
-							</div>
-						</div>
-					</div>					
-				</div>
-			</fieldset>
 			
-			<fieldset ng-show="outputVisible">
-				<legend>Compiled template code:</legend>
-				<div class="row-fluid">
-					<div class="field-controls">
-						<div class="controls">
-							<ul class="nav nav-tabs">
-								<li class="active"><a href="#tab-output-beautiful" data-toggle="tab">Beautiful</a></li>
-								<li><a href="#tab-output-raw" data-toggle="tab">Raw</a></li>
-							</div>
-							
-							<div class="tab-content">
-								<div class="tab-pane active" id="tab-output-beautiful">
-									<pre id="output-beautiful" class="prettyprint lang-js linenums" ng-bind="output.beautiful" ng-init="init()" ng-select-on-click>
-									</pre>
+							<div class="span4">
+								<div class="control-group">
+									<label for="name" class="control-label">Identify your template with a unique name:</label>
+									<div class="controls">
+										<input type="text" placeholder="Ex.: 'my_dust_template'" class="span12" tabindex="2" ng-model="name" required>
+									</div>
 								</div>
-								<div class="tab-pane" id="tab-output-raw">
-									<pre id="output-raw" ng-bind="output.raw" ng-select-on-click>
-									</pre>
+								
+								<div class="form-actions control-group">			
+									<label class="control-label">Compile your template:</label>
+								
+									<div class="controls">
+										<button class="btn btn-primary" tabindex="3" 
+											ng-disabled="dustrForm.$invalid || isUnchanged()" 
+											ng-click="compile()"
+											ng-track-ga="click" 
+											ng-track-ga-category="User actions" 
+											ng-track-ga-name="Compile template">
+											<i class="icon-white icon-ok"></i> Compile
+										</button>
+			
+										<button class="btn" tabindex="5" ng-disabled="isUnchanged()" ng-click="clear()">
+											<i class="icon-remove"></i> Clear
+										</button>
+									</div>
 								</div>
-							</div>							
-							
-							<p class="help-block">Copy this code and put it in your templates script.</p>
-						</div>						
+							</div>					
+						</div>		
+						</fieldset>			
 						
-					</div>
+						<fieldset ng-show="output.raw != null" id="output-fieldset">
+							<legend>Compiled template code:</legend>
+							<div class="row-fluid">
+								<div class="field-controls">
+									<div class="controls">
+										<ul class="nav nav-tabs">
+											<li class="active"><a href="#tab-output-beautiful" data-toggle="tab">Beautiful</a></li>
+											<li><a href="#tab-output-raw" data-toggle="tab">Raw</a></li>
+										</ul>
+										
+										
+										<div class="tab-content">
+											<div class="tab-pane active" id="tab-output-beautiful">
+												<pre id="output-beautiful" class="prettyprint lang-js linenums" ng-bind="output.beautiful" ng-select-on="click">
+												</pre>
+											</div>
+											<div class="tab-pane" id="tab-output-raw">
+												<pre id="output-raw" ng-bind="output.raw" ng-select-on="click">
+												</pre>
+											</div>
+										</div>							
+										
+										<p class="help-block">Copy this code and put it in your templates script.</p>
+									</div>		
+								</div>
+							</div>
+						</fieldset>	
 				</div>
-			</fieldset>
+				
+				<div id="pane-history" class="tab-pane">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>Template name</th>
+								<th>Size (raw)</th>
+								<th>Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in history.items">
+								<td><a href="#" ng-click="loadFromHistory($index)">{{ item.name }}</a></td>
+								<td>{{ item.bytes | size }}</td>
+								<td>{{ item.date | date:"MMMM d, y 'at' h:mm a"  }}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>				
+			</div>			
 		</form>		
 	</div>
 
@@ -151,6 +182,7 @@
 	</footer>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="scripts/modernizr-2.5.3.dustr.js"></script>
 	<script src="scripts/bootstrap.min.js"></script>
 	<script src="scripts/prettify.js"></script>
 	<script src="scripts/dust-full-1.0.0.js"></script>

@@ -4,36 +4,60 @@ PR_SHOULD_USE_CONTINUATION = true;
  * Online DustJS compiler Angular controller script 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
  */ 
-function DustrCtrl($scope, $window, $timeout)
+function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 {
 	"use strict";
 	
-	// Input & output fields
-	angular.extend($scope, {
+	// Default scope variables
+	var defaults = {
 		source: null,
 		name: null,
 		output: {
 			raw: null,
 			beautiful: null
 		},
-		outputVisible: false
-	});
+		history: (function () {
+			// Load history
+			var module = angular.module("dustr");
+			var dustrStorage = $localStorage ? $localStorage.getItem("dustr-history") : null;			
+			
+			return dustrStorage ? JSON.parse(dustrStorage) : {
+				items: []
+			};
+		}())
+	};
+	
+	// Input & output fields
+	angular.extend($scope, defaults);
 	
 	// Events
 	$scope.compile = function () {
 		$scope.output.raw = dust.compile($scope.source, $scope.name);
+		
+		// Record in history (insert at beginning)
+		$scope.history.items.unshift({
+			name: $scope.name,
+			source: $scope.source,
+			output: $scope.output.raw,
+			bytes: $scope.output.raw.length,
+			date: new Date()
+		});
 	};
 	
-	$scope.init = function () {
-		window['PR_SHOULD_USE_CONTINUATION'] = false;
+	// Load a template from the history
+	$scope.loadFromHistory = function (index) {
+		if (index >= 0 && index < $scope.history.items.length) {
+			var item = $scope.history.items[index];
+			
+			$scope.source = item.source;
+			$scope.name = item.name;
+			$scope.output.raw = item.output;
+		}
 	};
 	
 	// Handler to clear the fields
 	$scope.clear = function () {
-		$scope.source = null;
-		$scope.name = null;
-		$scope.output.raw = null;
-		$scope.output.beautiful = null;
+		$scope.source = $scope.name = $scope.output.raw = $scope.output.beautiful = null;
 	};
 	
 	// Handler to determine if compile and reset buttons should be enabled/disabled
@@ -42,27 +66,35 @@ function DustrCtrl($scope, $window, $timeout)
 			&& $scope.name == null;
 	};
 	
-	// js_beautify() when setting the output
+	// js_beautify() when raw output is set
 	$scope.$watch("output.raw", function (newValue, oldValue) {
+		$scope.output.beautiful = newValue !== null ? js_beautify(newValue) : null;
+	});
+	
+	// prettyPrint() when beautiful output is set
+	$scope.$watch("output.beautiful", function (newValue, oldValue) {
 		if (newValue !== null) {
-			$scope.output.beautiful = js_beautify(newValue);
-			
+			$timeout(function () {
+				prettyPrint();
+			}, 1, false);
 		}
-		else {
-			$scope.output.beautiful = null;
+	});
+	
+	// Persist the history in local storage
+	$scope.$watch("history.items.length", function (newValue, oldValue) {
+		if ($localStorage) {
+			if (newValue !== null && newValue > 0) {
+				localStorage.setItem("dustr-history", JSON.stringify($scope.history));
+			}
 		}
-		
-		$scope.outputVisible = (newValue !== null);
-		
-		$timeout(function () {
-			prettyPrint();
-		}, 1, false);
 	});
 }
 
 
 (function () {
 	var dustr = angular.module("dustr", []);
+	
+	dustr.value("$localStorage", angular.element("html").hasClass("localstorage") ? localStorage : false);
 	
 	/**
 	 * Track Google Analytics events
@@ -86,9 +118,14 @@ function DustrCtrl($scope, $window, $timeout)
 		};
 	});
 	
-	dustr.directive("ngSelectOnClick", function () {
+	/**
+	 * Select element content on specified event name
+	 * 
+	 * Ex.: <pre ng-select-on="click">...</pre>
+	 */
+	dustr.directive("ngSelectOn", function () {
 		return function (scope, element, attrs) {			
-			angular.element(element).on('click', function (e) {
+			angular.element(element).on(attrs.ngSelectOn, function (e) {
 				var obj = $(this)[0];
 				
 				if ($.browser.msie) {
@@ -105,9 +142,42 @@ function DustrCtrl($scope, $window, $timeout)
 			        var selection = obj.ownerDocument.defaultView.getSelection();
 			        selection.setBaseAndExtent(obj, 0, obj, 1);
 			    }
-
-			})
+			});
 		};
 	});
+	
+	dustr.directive("ngActivateOnOutput", function () {
+		return function (scope, element, attrs) {
+			scope.$watch("output.raw", function (newValue, oldValue) {
+				if (newValue !== null) {
+					angular.element(element).tab("show");
+				}
+			});
+		};
+	});
+	
+	dustr.filter('size', function () {
+		return function (input) {
+			var number = parseInt(input),
+				unit = "bytes";
+			
+			if (number < 1024) {
+				unit = "bytes";				
+			}
+			else if (number < (1024 * 1024)) {
+				unit = "kb";
+				number = Math.round(number / 1024);
+			}
+			else if (number < (1024 * 1024 * 1024)) {
+				unit = "mb";
+				number = Math.round(number / 1024 / 1024);
+			}
+			
+			return number + " " + unit;
+		};
+	});
+	
+	
+	//DustrCtrl.$inject = ['$scope', "$localStorage"];
 }());
 
