@@ -1,10 +1,8 @@
-PR_SHOULD_USE_CONTINUATION = true;
-
 /**!
  * Online DustJS compiler Angular controller script 
  * Written by Nicolas Laplante (nicolas.laplante@gmail.com)
  */ 
-function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
+function DustrCtrl($scope, $window, $timeout, $history)
 {
 	"use strict";
 	
@@ -16,15 +14,7 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 			raw: null,
 			beautiful: null
 		},
-		history: (function () {
-			// Load history
-			var module = angular.module("dustr");
-			var dustrStorage = $localStorage ? $localStorage.getItem("dustr-history") : null;			
-			
-			return dustrStorage ? JSON.parse(dustrStorage) : {
-				items: []
-			};
-		}())
+		history: $history
 	};
 	
 	// Input & output fields
@@ -34,8 +24,8 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 	$scope.compile = function () {
 		$scope.output.raw = dust.compile($scope.source, $scope.name);
 		
-		// Record in history (insert at beginning)
-		$scope.history.items.unshift({
+		// Record in history
+		$scope.history.add({
 			name: $scope.name,
 			source: $scope.source,
 			output: $scope.output.raw,
@@ -82,19 +72,76 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 	
 	// Persist the history in local storage
 	$scope.$watch("history.items.length", function (newValue, oldValue) {
-		if ($localStorage) {
-			if (newValue !== null && newValue > 0) {
-				localStorage.setItem("dustr-history", JSON.stringify($scope.history));
-			}
+		if (newValue !== null && newValue > 0) {
+			$scope.history.flush();
 		}
 	});
 }
 
 
 (function () {
+	
+	"use strict";
+	
+	/**
+	 * Template history kept in localStorage
+	 */
+	function History() {
+		
+		// Retrieve items
+		if (typeof(localStorage) !== "undefined") {
+			
+			var storedItems = localStorage.getItem("dustr-history");
+			
+			if (storedItems) {
+				this.items = JSON.parse(storedItems);
+			}
+			else {
+				this.items = [];
+			}
+		}
+		else {
+			this.items = [];
+		}
+	}
+
+	/**
+	 * Add an item to the hsitory
+	 * @param obj the history item definition
+	 */
+	History.prototype.add = function(obj) {
+	    this.items.unshift(obj);
+	};
+
+	/**
+	 * Clear the history
+	 */
+	History.prototype.clear = function() {
+	    this.items = [];
+	};
+
+	/**
+	 * Remove a specific entry from the history
+	 * @param index the index of the item to remove
+	 */
+	History.prototype.remove = function(index) {
+	    this.items.splice(index, 1);
+	};
+
+	/**
+	 * Persist the history to the localStorage if available
+	 */
+	History.prototype.flush = function() {
+	    if (typeof(localStorage) !== "undefined") {
+	        localStorage.setItem("dustr-history", JSON.stringify(this.items));
+	    }
+	};
+	
+	// Keep a reference to our module
 	var dustr = angular.module("dustr", []);
 	
-	dustr.value("$localStorage", angular.element("html").hasClass("localstorage") ? localStorage : false);
+	// Define the $history service
+	dustr.value("$history", new History());
 	
 	/**
 	 * Track Google Analytics events
@@ -146,6 +193,9 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 		};
 	});
 	
+	/**
+	 * Activate a tab when $scope.output.raw changes
+	 */
 	dustr.directive("ngActivateOnOutput", function () {
 		return function (scope, element, attrs) {
 			scope.$watch("output.raw", function (newValue, oldValue) {
@@ -156,6 +206,9 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 		};
 	});
 	
+	/**
+	 * Format sizes (bytes, kb, mb, etc...)
+	 */
 	dustr.filter('size', function () {
 		return function (input) {
 			var number = parseInt(input),
@@ -176,8 +229,5 @@ function DustrCtrl($scope, $window, $timeout, $log, $localStorage)
 			return number + " " + unit;
 		};
 	});
-	
-	
-	//DustrCtrl.$inject = ['$scope', "$localStorage"];
 }());
 
